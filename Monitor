@@ -1,0 +1,123 @@
+package signosvitales;
+
+import java.awt.Color;
+
+/**
+ *
+ * @author Jonathan de Jesús Pérez Becerra
+ */
+public class Monitor {
+
+    private int ECG, resp, SpO2, mon;
+    private double temp, PNI;
+    Color led1, led2, led3, alarma;
+
+    public Monitor() {
+        toString();
+    }
+    
+    public Monitor(int ECG, int resp, double temp, double PNI, int SpO2) {
+        this.ECG = ECG;
+        this.resp = resp;
+        this.temp = temp;
+        this.PNI = PNI;
+        this.SpO2 = SpO2;
+        Electrocardiograma(ECG);
+        Resp(resp);
+        Temp(temp);
+        PresionNoInvasiva(PNI);
+        SaturacionOxigeno(SpO2);
+        Pantalla();
+    }
+
+    public void Electrocardiograma(int x) {
+        if (x == 0) {
+            double cuadros = (Math.random() * (6 - 2)) + 2;
+            int frecuenciacardiaca = (int) (300 / cuadros);
+            this.ECG = frecuenciacardiaca;
+        }
+    }
+
+    public void Resp(int x) {
+        if (x == 0) {
+            this.resp = (int)(Math.random() * 20);
+        }
+    }
+
+    public void Temp(double x) {
+        if (x == 0) {
+            double temperatura = (Math.random() * (40 - 35)) + 35;
+            this.temp = temperatura;
+        }
+    }
+
+    public void PresionNoInvasiva(double x) {
+        if (x == 0) {
+            double pas, pad;
+            pas = Math.random() * 200;
+            pad = Math.random() * 140 + 1;
+            this.PNI = (pas + (2 * pad)) / 3;
+        }
+    }
+
+    public void SaturacionOxigeno(int x) {
+        if (x == 0) {
+            int saturacion = (int)((Math.random() * (100 - 86)) + 86);
+            this.SpO2 = saturacion;
+        }
+    }
+
+    public void Pantalla() {
+        int dev = 0;
+        if (ECG < 60 | ECG > 100) {
+            dev = 1;
+            led1 = Color.RED;
+        } else{
+            led1 = Color.GREEN;
+        }
+        if (resp < 8 | resp > 16) {
+            dev = 1;
+        }
+        if (temp < 36.1 | temp > 37.2 && temp < 39) {
+            led2 = Color.ORANGE;
+            dev = 1;
+        } else {
+            if (temp >= 39) {
+                led2 = Color.RED;
+            } else {
+                led2 = Color.GREEN;
+            }
+        }
+        if (PNI > 120) {
+            dev = 1;
+        }
+        if (SpO2 < 95) {
+            led3 = Color.ORANGE;
+            dev = 1;
+        } else {
+            led3 = Color.GREEN;
+        }
+
+        mon = dev;
+        alarma(mon);
+    }
+
+    public void alarma(int x) {
+        if (x == 0) {
+            this.alarma = Color.GREEN;
+        } else {
+            this.alarma = Color.RED;
+        }
+    }
+
+    @Override
+    public String toString() {
+        return " Monitor \n" 
+                + " ECG=" + ECG +"     led=" + led1 + "\n"
+                + " resp=" + resp + "\n"
+                + " SpO2=" + SpO2 + "     led=" + led3 + "\n"
+                + " temp=" + temp + "     led=" + led2 + "\n" 
+                + " PNI=" + PNI + "\n"
+                + " alarma=" + alarma + "\n";
+    }
+}
